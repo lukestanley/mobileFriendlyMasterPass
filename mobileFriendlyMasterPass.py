@@ -1,4 +1,5 @@
-versionString = 'mobileFriendlyMasterPass v1'
+#!/usr/bin/python
+versionString = 'mobileFriendlyMasterPass v1.1 alpha'
 desc = 'Generate a mobile friendly passwords for each site using a master password and site name'
 
 """
@@ -12,42 +13,50 @@ TODO: GUI, maybe Tkinter and port to mobile
 
 Basic structure:
 	masterpassword + site name -- > hash --> numbers --> select 5 words from low frequency dictionary, and add a few numbers
-	
 """
 
 import hashlib
 import scrypt
+import sys
+
+try:
+	input = raw_input
+except NameError:
+	pass
 
 debugging = False
 
-def make_password(masterPassword,siteName):
-	
-	key = masterPassword+siteName
+
+def make_password(masterPassword, siteName):
+	key = masterPassword + siteName
 	
 	global debugging
-	
 	wordnum = 5
 
-	hash = hashlib.sha256(key).hexdigest()
-	if debugging: 
-		print (hash)
-
-	for n in xrange(6):
-		hash = scrypt.hash(hash,'q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF'+lessFrequentButStillAutoSuggestableWordsStr+key)
+	hash = str(hashlib.sha256(key.encode('utf-8')).hexdigest())
 	if debugging:
 		print (hash)
 
+	for n in range(6):
+		hash = str(scrypt.hash(str(hash), 'q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF' + str(lessFrequentButStillAutoSuggestableWordsStr) + str(key)))
+	if debugging:
+		print (hash)
+	print (hash)
+	if sys.version_info[0] > 2:
+		hash = hash.encode('utf-8')
 	hash = hashlib.sha256(hash).hexdigest()
 	if debugging:
 		print (hash)
 
-
 	chunklen = len(hash)/(wordnum)
-	bits=[]
+	bits = []
 	for h in range(wordnum):
-		bits.append(hash[h*chunklen:(h+1)*chunklen])
-	if debugging: print ("bits: ", bits)
-	
+		rstart = int(h*chunklen)
+		rend = int((h+1) * chunklen)
+		part = hash[rstart:rend]
+		bits.append(part)
+	if debugging:
+		print ("bits: ", bits)
 	#hash = int(bits[0], 16)
 	#print "hash D", hash
 
@@ -80,13 +89,13 @@ def main():
 	different password!""")
 
 	print ('Enter master pass:')
-	masterPassword = raw_input()
+	masterPassword = input()
 	
 	print ('enter lowercase name of site as one word with no punctuation, e.g: google')
-	siteName = raw_input()
+	siteName = input()
 	
 	print ('Computing password...')
-	password = mobileFriendlyMasterPass(masterPassword,siteName)
+	password = make_password(masterPassword,siteName)
 	
 	print ('Your password is:')
 	print (password)
