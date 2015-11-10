@@ -6,11 +6,19 @@
 	<title>mobileFriendlyMasterPass</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<meta name="generator" content="Geany 1.23.1" />
-	<script src='bundle.js'></script>
+	<style>
+	body {font-family: sans-serif;}
+	</style>
 </head>
 
 <body>
-	
+<h1>mobileFriendlyMasterPass v1.2 beta</h1>
+<h2>Generate a mobile friendly password for each site using a master password and site name</h3>
+<h3>Hello, just a word of warning, make sure you enter the master password and site name correctly, <br> otherwise next time you may get a different password!</h3>
+<p><span>Enter master pass:</span><input id='masterPassword' type='text'/></p>
+<p><span>Enter lowercase name of site as one word with no punctuation, e.g: google. </span><input id='siteName' type='text'/></p>
+<button onclick='window.processInput()'>Make password</button>
+<script src='bundle.js'></script>
 </body>
 
 </html>

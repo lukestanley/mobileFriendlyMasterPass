@@ -1,6 +1,3 @@
-window.versionString = 'mobileFriendlyMasterPass v1.2 beta';
-window.desc = 'Generate a mobile friendly password for each site using a master password and site name';
-
 var bigInt = require("big-integer");
 window.bigInt = require("big-integer");
 var scrypt = require('scryptsy');
@@ -37,6 +34,7 @@ window.sha256hex = function(data){
 window.make_password = function(masterPassword, siteName){
 
 	key = masterPassword + siteName;
+	print(key);
 	key = sha256hex(key);
 
 	salt = "q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF" + lessFrequentButStillAutoSuggestableWordsStr + key;
@@ -71,24 +69,20 @@ window.make_password = function(masterPassword, siteName){
 	
 };
 
-window.ran = false;
-window.main = function(){
-	if (window.ran === false){
-		window.ran = true;
-		print (versionString);
+
+window.processInput = function(){
+
 		//alert (desc);
-		alert (desc + "\n \n Hello, just a word of warning, make sure you enter the master password and site name correctly, \n otherwise next time you may get a different password!");
 
-
-		masterPassword = prompt('Enter master pass:');
+		masterPassword = document.getElementById('masterPassword').value;
 		
-		siteName = prompt('Enter lowercase name of site as one word with no punctuation, e.g: google. Then password will compute');
+		siteName = document.getElementById('siteName').value;
 		
 		//alert ('About to compute password...');
 		password = make_password(masterPassword,siteName);
 		
 		prompt('Your password is',password);
-	}
+
 };
 
 
@@ -96,4 +90,4 @@ window.lessFrequentButStillAutoSuggestableWordsStr = 'fawn nunnery scold origina
 lessFrequentButStillAutoSuggestableWords = lessFrequentButStillAutoSuggestableWordsStr.split(' ');
 
 //print(make_password('',''));
-main();
+
