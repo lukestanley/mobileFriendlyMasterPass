@@ -17,7 +17,7 @@ The Android (Java) implementation is here:
 
 https://github.com/chozabu/MobileFriendlyMasterPass-Android/blob/master/app/src/main/java/org/chozabu/pypocketpass/PPPActivity.java
 
-There is an Android APK prebuilt here: http://chozabu.net/autopush/mfmpa.apk
+There is an Android APK prebuilt here: http://chozabu.net/autopush/master-pass-app.apk
 
 Note that bundle.js is main.js compiled with Browserify
 It's contents belong to their respective authors. 
