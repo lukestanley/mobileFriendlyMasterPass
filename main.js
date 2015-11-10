@@ -1,23 +1,17 @@
+var scrypt = require('scryptsy');
+var crypto = require('crypto');
 var bigInt = require("big-integer");
 window.bigInt = bigInt;
-var scrypt = require('scryptsy');
-var crypto = require('crypto')
-  , text = 'test'
-  , key = 'test'
-  , salt = 'test'
-  , hash;
 
 window.testCrypto = function(){
 	sha512sum = crypto.createHash('sha256');
 	sha512sum.update('test');
 	hash = sha512sum.digest('hex');
 	console.log(hash); 
-	// 				password,	salt,	N=1 << 14,	r=8,	p=1,	buflen=64
-	data = scrypt(	key, 		salt, 	512, 			8, 		1, 		64);
+	// 				key,		salt,	N,		r,		p,		buflen
+	data = scrypt(	key, 		salt, 	512, 	8, 		1, 		64);
 	console.log(data.toString('hex')); 
 };
-
-
 
 window.print = function(a){
 	console.log(a);
@@ -59,7 +53,7 @@ window.make_password = function(masterPassword, siteName){
 
 
 window.processInput = function(){
-
+	
 		masterPassword = document.getElementById('masterPassword').value;
 		
 		siteName = document.getElementById('siteName').value;
@@ -68,7 +62,6 @@ window.processInput = function(){
 		password = make_password(masterPassword,siteName);
 		
 		prompt('Your password is',password);
-
 };
 
 
