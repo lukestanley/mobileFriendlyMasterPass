@@ -29,6 +29,8 @@ except NameError:
 debugging = False
 
 def sha256hex(data):
+	if sys.version_info[0] > 2:
+		data = data.encode('utf-8')
 	return str(hashlib.sha256(data).hexdigest())
 	
 def make_password(masterPassword, siteName):
@@ -38,8 +40,8 @@ def make_password(masterPassword, siteName):
 
 	salt = "q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF" + lessFrequentButStillAutoSuggestableWordsStr + key
 
-	shash = str(scrypt.hash(key, salt, N=128, r=16, buflen=64))
-	shash = shash.encode('hex')
+	shash = scrypt.hash(key, salt, N=128, r=16, buflen=64)
+	shash = codecs.encode(shash, 'hex')
 
 	result = ""
 
