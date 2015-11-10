@@ -4,13 +4,13 @@ var bigInt = require("big-integer");
 window.bigInt = bigInt;
 
 window.testCrypto = function(){
-	sha512sum = crypto.createHash('sha256');
-	sha512sum.update('test');
-	hash = sha512sum.digest('hex');
-	console.log(hash); 
+    sha512sum = crypto.createHash('sha256');
+    sha512sum.update('test');
+    hash = sha512sum.digest('hex');
+    console.log(hash); 
     //              key,        salt,   N,      r,      p,      buflen
     data = scrypt(  key,        salt,   512,    8,      1,      64);
-	console.log(data.toString('hex')); 
+    console.log(data.toString('hex')); 
 };
 
 window.print = function(a){
