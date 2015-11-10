@@ -1,7 +1,7 @@
 from mobileFriendlyMasterPass import make_password
 
-password = make_password('this-is-a-silly-pass','wordpress')
+password = make_password('a','a')
 
 print (password)
 
-assert (password == 'hirsute.regularity.confab.gazelle.gnome.6512')
+assert (password == 'extract.irrecoverable.joust.broil.cherubim.1637')
