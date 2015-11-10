@@ -1,4 +1,4 @@
-window.versionString = 'mobileFriendlyMasterPass v1.1 beta';
+window.versionString = 'mobileFriendlyMasterPass v1.2 beta';
 window.desc = 'Generate a mobile friendly password for each site using a master password and site name';
 
 var bigInt = require("big-integer");
