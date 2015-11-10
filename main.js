@@ -8,8 +8,8 @@ window.testCrypto = function(){
 	sha512sum.update('test');
 	hash = sha512sum.digest('hex');
 	console.log(hash); 
-	// 				key,		salt,	N,		r,		p,		buflen
-	data = scrypt(	key, 		salt, 	512, 	8, 		1, 		64);
+    //              key,        salt,   N,      r,      p,      buflen
+    data = scrypt(  key,        salt,   512,    8,      1,      64);
 	console.log(data.toString('hex')); 
 };
 
