@@ -1,6 +1,6 @@
 #!/usr/bin/python
-versionString = 'mobileFriendlyMasterPass v1.1 alpha'
-desc = 'Generate a mobile friendly passwords for each site using a master password and site name'
+versionString = 'mobileFriendlyMasterPass v1.2 beta'
+desc = 'Generate a mobile friendly password for each site using a master password and site name'
 
 """
 Standing on the sholders of the creators of Python hashlib, scrypt, and word lovers!
@@ -18,6 +18,8 @@ Basic structure:
 import hashlib
 import scrypt
 import sys
+import codecs
+
 
 try:
 	input = raw_input
@@ -26,60 +28,38 @@ except NameError:
 
 debugging = False
 
-
+def sha256hex(data):
+	return str(hashlib.sha256(data).hexdigest())
+	
 def make_password(masterPassword, siteName):
-	key = masterPassword + siteName
-	
 	global debugging
-	wordnum = 5
+	key = masterPassword + siteName
+	key = sha256hex(key)
 
-	hash = str(hashlib.sha256(key.encode('utf-8')).hexdigest())
-	if debugging:
-		print (hash)
+	salt = "q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF" + lessFrequentButStillAutoSuggestableWordsStr + key
 
-	for n in range(6):
-		hash = str(scrypt.hash(str(hash), 'q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF' + str(lessFrequentButStillAutoSuggestableWordsStr) + str(key)))
-	if debugging:
-		print (hash)
-	print (hash)
-	if sys.version_info[0] > 2:
-		hash = hash.encode('utf-8')
-	hash = hashlib.sha256(hash).hexdigest()
-	if debugging:
-		print (hash)
+	shash = str(scrypt.hash(key, salt, N=128, r=16, buflen=64))
+	shash = shash.encode('hex')
 
-	chunklen = len(hash)/(wordnum)
-	bits = []
-	for h in range(wordnum):
-		rstart = int(h*chunklen)
-		rend = int((h+1) * chunklen)
-		part = hash[rstart:rend]
-		bits.append(part)
-	if debugging:
-		print ("bits: ", bits)
-	#hash = int(bits[0], 16)
-	#print "hash D", hash
+	result = ""
 
-	words = []
-	dictlen = len(lessFrequentButStillAutoSuggestableWords)
+	desired_word_count = 5
+	chunklen = int(len(shash) / desired_word_count)
 
-	for b in bits:
-		if debugging: print ("bit:", b)
-		windex = int(b, 16)
-		if debugging:
-			print ("winxes1:", windex)
-		windex = windex % dictlen
-		if debugging: 
-			print ("winxes2:", windex)
-		word = lessFrequentButStillAutoSuggestableWords[windex]
-		words.append(word)
-
-	words= '.'.join(words).lower()
-
-	numbers = str(int(hash[0:5], 16) % 99)
-	numbers = numbers + str(int(hash[5:10], 16) % 99)
 	
-	return words + '.' + numbers
+	i = 0
+	while i < desired_word_count:
+		lenStart = i * chunklen
+		lenEnd = (i + 1) * chunklen
+		chunk = shash[lenStart:lenEnd]
+		ival = int(chunk, 16) % len(lessFrequentButStillAutoSuggestableWords)
+		result = result + lessFrequentButStillAutoSuggestableWords[ival]
+		result = result + "."
+		i = i + 1
+	
+	result = result + str(ival)
+	
+	return result
 
 def main():
 	print (versionString)

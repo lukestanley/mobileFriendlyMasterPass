@@ -1,7 +1,8 @@
 window.versionString = 'mobileFriendlyMasterPass v1.1 beta';
 window.desc = 'Generate a mobile friendly password for each site using a master password and site name';
 
-
+var bigInt = require("big-integer");
+window.bigInt = require("big-integer");
 var scrypt = require('scryptsy');
 var crypto = require('crypto')
   , text = 'test'
@@ -27,93 +28,46 @@ window.testCrypto = function(){
 window.print = function(a){
 	console.log(a);
 };
-window.slice = function(array, from, to, step) {
-    /* slice array with optional step (python-like) */
-    if (from===null) from=0;
-    if (to===null) to=array.length;
-    if (!step) step=1;
-    var result = Array.prototype.slice.call(array, from, to);
 
-    if (step<0) result.reverse();
-    step = Math.abs(step);
-    if (step>1) {
-        var result2 = [];
-        for (var i = result.length - 1; i >= 0; i--) {
-            (i%(step)===0) && result2.push(result[i]);
-        };
-        result2.reverse();
-        result = result2;
-   }
-   return result;
+window.sha256hex = function(data){
+	var sha256sum = crypto.createHash('sha256'); 
+	sha256sum.update(data);
+	return sha256sum.digest('hex');
 };
 window.make_password = function(masterPassword, siteName){
+
 	key = masterPassword + siteName;
+	key = sha256hex(key);
+
+	salt = "q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF" + lessFrequentButStillAutoSuggestableWordsStr + key;
+
+	shash = scrypt(key,salt, 128, 16, 1, 64).toString('hex');
 	
-	
-	wordnum = 5;
+	result = "";
 
-	sha512sum = crypto.createHash('sha256'); 
-	sha512sum.update(key);
-	hash = sha512sum.digest('hex');
+	desired_word_count = 5;
+	chunklen = parseInt(shash.length / desired_word_count);
 
-
-	//if debugging:
-		//print (hash,39);
-		
-	salt = 'q3*V!jAre*kF8p5TPxXWQxQs$HTtdn@&dWSzTqwYBn$TF' + lessFrequentButStillAutoSuggestableWordsStr + key
-	//for n in range(6):
-	for (n = 0; n < 6; n++) { 
-		//hash = scrypt.hash(hash, salt, N=512, r=8);
-		//hash = codecs.encode(hash, 'hex');
-		// 				password,	salt,	N=1 << 14,	r=8,	p=1,	buflen=64
-		hash = scrypt(	hash, 		salt, 	512, 		8, 		1, 		64);
-		hash = hash.toString('hex'); 
+	for (i = 0; i < desired_word_count; i++) {
+		lenStart = i * chunklen;
+		lenEnd = (i + 1) * chunklen;
+		chunk = shash.substring(lenStart, lenEnd);
+		ival = bigInt(chunk, 16).mod(lessFrequentButStillAutoSuggestableWords.length);
+		result = result + lessFrequentButStillAutoSuggestableWords[ival];
+		result = result + ".";
 	}
-	//if debugging:
-		//print (hash,45)
-	
-		sha512sum = crypto.createHash('sha256'); 
-		sha512sum.update(hash);
-		hash = sha512sum.digest('hex');
+	result = result + ival;
 
-	//if debugging:
-		//print (hash)
-
-	chunklen = parseInt(hash.length/(wordnum));
-	//print(chunklen);
-	bits = [];
-	for (h = 0; h < wordnum; h++) { 
-		rstart = parseInt(h*chunklen);
-		rend = parseInt((h+1) * chunklen);
-		//part = hash[rstart:rend];
-		part = slice(hash,rstart,rend);
-		bits.push(part.join(''));
-		//print([rstart,rend,part]);
-	}
-	//rint (["bits: ", bits,59])
-	//print (bits);
+	print(result);
+	return result;
+	//var start = new Date().getTime();
+	//hash = scrypt(	'test', 		'test', 	128, 		16, 		1, 		64);
+	//hash = hash.toString('hex'); 
+	//print (hash);
+	//var end = new Date().getTime();
+	//var time = end - start;
+	//alert('Execution time: ' + time);
 	
-	words = [];
-	dictlen = lessFrequentButStillAutoSuggestableWords.length;
-	for (bi = 0; bi < bits.length; bi++) {
-		b = bits[bi];
-		windex = parseInt(b, 16);
-		//print (["winxes1:", windex]);
-		windex = windex % dictlen;
-		//print (["winxes2:", windex]);
-		word = lessFrequentButStillAutoSuggestableWords[windex];
-		words.push(word.toLowerCase());
-	}
-	words= words.join('.');
-	//print(words);
-	jn = slice(hash,0,5).join('');
-	numbers = String(parseInt(jn, 16) % 99);
-	jn = slice(hash,5,10).join('');
-	numbers = numbers + String(parseInt(jn, 16) % 99);
-	//print(numbers);
-
-	
-	return words + '.' + numbers;
 	
 };
 
