@@ -71,21 +71,24 @@ window.make_password = function(masterPassword, siteName){
 	
 };
 
+window.ran = false;
 window.main = function(){
-print (versionString)
-	//alert (desc);
-	alert (desc + "\n \n Hello, just a word of warning, make sure you enter the master password and site name correctly, \n otherwise next time you may get a different password!");
+	if (window.ran === false){
+		window.ran = true;
+		print (versionString);
+		//alert (desc);
+		alert (desc + "\n \n Hello, just a word of warning, make sure you enter the master password and site name correctly, \n otherwise next time you may get a different password!");
 
 
-	masterPassword = prompt('Enter master pass:');
-	
-	siteName = prompt('Enter lowercase name of site as one word with no punctuation, e.g: google. Then password will compute');
-	
-	//alert ('About to compute password...');
-	password = make_password(masterPassword,siteName);
-	
-	prompt('Your password is',password);
-	
+		masterPassword = prompt('Enter master pass:');
+		
+		siteName = prompt('Enter lowercase name of site as one word with no punctuation, e.g: google. Then password will compute');
+		
+		//alert ('About to compute password...');
+		password = make_password(masterPassword,siteName);
+		
+		prompt('Your password is',password);
+	}
 };
 
 
