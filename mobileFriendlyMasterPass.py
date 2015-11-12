@@ -1,5 +1,5 @@
 #!/usr/bin/python
-versionString = 'mobileFriendlyMasterPass v1.2 beta'
+versionString = 'mobileFriendlyMasterPass v1.3 beta'
 desc = 'Generate a mobile friendly password for each site using a master password and site name'
 
 """
@@ -19,6 +19,7 @@ import hashlib
 import scrypt
 import sys
 import codecs
+import re
 
 
 try:
@@ -35,6 +36,10 @@ def sha256hex(data):
 	
 def make_password(masterPassword, siteName):
 	global debugging
+	
+	#strip whitespace and make lowercase
+	siteName = re.sub(r'\s+', '', siteName).lower()
+	
 	key = masterPassword + siteName
 	key = sha256hex(key)
 
