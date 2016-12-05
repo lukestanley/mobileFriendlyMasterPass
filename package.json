@@ -1,0 +1,24 @@
+{
+  "name": "mobile_friendly_master_pass",
+  "version": "1.0.0",
+  "description": "Generate mobile friendly passwords from a master password, and a site name, without requiring a database to store passwords",
+  "main": "main.js",
+  "scripts": {
+    "test": "make_password('a','a')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukestanley/mobileFriendlyMasterPass.git"
+  },
+  "author": "Luke Stanley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukestanley/mobileFriendlyMasterPass/issues"
+  },
+  "homepage": "https://github.com/lukestanley/mobileFriendlyMasterPass#readme",
+  "dependencies": {
+    "big-integer": "^1.6.17",
+    "crypto": "0.0.3",
+    "scryptsy": "^2.0.0"
+  }
+}

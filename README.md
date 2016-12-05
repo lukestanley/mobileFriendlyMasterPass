@@ -21,3 +21,30 @@ There is an Android APK prebuilt here: http://chozabu.net/autopush/master-pass-a
 
 Note that bundle.js is main.js compiled with Browserify
 It's contents belong to their respective authors. 
+
+
+
+===Compiling and using the Javascript version===
+
+
+Install Browserify, e.g: sudo npm install -g browserify
+
+git clone git@github.com:lukestanley/mobileFriendlyMasterPass.git
+
+npm install
+
+browserify main.js -o bundle.js
+
+
+
+python -m SimpleHTTPServer
+
+firefox localhost:8000
+
+
+
+To optionally compress the JS file(minify and reduce codepaths) using the Google's Closure service:
+
+python compile_js.py
+
+Modify line 21 of main.html to use compiled.js instead of bundle.js
