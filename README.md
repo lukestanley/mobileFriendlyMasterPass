@@ -24,7 +24,7 @@ It's contents belong to their respective authors.
 
 
 
-===Compiling and using the Javascript version===
+## Compiling and using the Javascript version ##
 
 
 Install Browserify, e.g: sudo npm install -g browserify
@@ -46,5 +46,6 @@ firefox localhost:8000
 To optionally compress the JS file(minify and reduce codepaths) using the Google's Closure service:
 
 python compile_js.py
+
 
 Modify line 21 of main.html to use compiled.js instead of bundle.js
